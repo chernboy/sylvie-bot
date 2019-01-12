@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+    id 'application'
+    id "com.github.johnrengelman.shadow" version "4.0.3"
+}
+
+sourceCompatibility = 1.8
+mainClassName = "Main"
+
+group 'moe.kaka'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile 'net.dv8tion:JDA:3.5.0_329'
+}
