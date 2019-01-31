@@ -10,7 +10,6 @@ import javax.security.auth.login.LoginException;
 public class Main extends ListenerAdapter {
     public static void main(String[] args) throws LoginException {
         JDABuilder builder = new JDABuilder(AccountType.BOT);
-
         String token = Token.token;
         builder.setToken(token);
         builder.addEventListener(new Main());
@@ -46,7 +45,14 @@ public class Main extends ListenerAdapter {
                 event.getChannel().sendMessage("u w u").queue();
                 break;
             case "&mtg":
-                //TODO:
+                try {
+                    MTGHandler handler = new MTGHandler();
+                    String param = msge.substring(5);
+                    String res = handler.findCard(param);
+                    event.getChannel().sendMessage(res).queue();
+                } catch (Exception e) {
+                    System.out.println("error occured: " + e.getMessage());
+                }
                 break;
         }
     }
