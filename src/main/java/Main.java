@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import javax.security.auth.login.LoginException;
+import java.util.ArrayList;
 
 public class Main extends ListenerAdapter {
     public static void main(String[] args) throws LoginException {
@@ -48,8 +49,10 @@ public class Main extends ListenerAdapter {
                 try {
                     MTGHandler handler = new MTGHandler();
                     String param = msge.substring(5);
-                    String res = handler.findCard(param);
-                    event.getChannel().sendMessage(res).queue();
+                    ArrayList<String> res = handler.findCard(param);
+                    for (String s: res) {
+                        event.getChannel().sendMessage(s).queue();
+                    }
                 } catch (Exception e) {
                     System.out.println("error occured: " + e.getMessage());
                 }
