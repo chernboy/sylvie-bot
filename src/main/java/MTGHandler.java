@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MTGHandler {
 
@@ -19,27 +21,16 @@ public class MTGHandler {
         String url = "https://api.scryfall.com/cards/search?";
 
         // encode request
-        // TODO: write helper to handle dynamic parameters
-        String req = "";
-        req = req.concat(URLEncoder.encode("q", "UTF-8"));
-        req = req.concat("=");
-        req = req.concat(URLEncoder.encode(s, "UTF-8"));
-        req = req.concat("&");
-        req = req.concat(URLEncoder.encode("order", "UTF-8"));
-        req = req.concat("=");
-        req = req.concat(URLEncoder.encode("rarity", "UTF-8"));
-        req = req.concat("&");
-        req = req.concat(URLEncoder.encode("dir", "UTF-8"));
-        req = req.concat("=");
-        req = req.concat(URLEncoder.encode("desc", "UTF-8"));
+        Map<String, String> param = new HashMap<>();
+        param.put("q", s); // query base on name
+        param.put("order", "rarity"); // order response
+        param.put("dir", "desc"); // specify direction
+        String req = this.generateRequest(param);
 
         url = url.concat(req);
         URL getReq = new URL(url);
         HttpsURLConnection con = (HttpsURLConnection) getReq.openConnection();
-        System.out.println("connection established");
         int status = con.getResponseCode();
-        System.out.println("Status code: " + status);
-
         ArrayList<String> cardFaces = new ArrayList<>();
         // handle errors in HTTP request response
         if (status > 299) {
@@ -72,5 +63,22 @@ public class MTGHandler {
             cardFaces.add(card.getString("normal"));
         }
         return cardFaces;
+    }
+
+    /**
+     * Generates a request given the parameters and values
+     * @param param Pairs of parameter/value to encode
+     * @return encoded HTTP request of the given parameter/value pairs
+     * @throws IOException if error occurs encoding
+     */
+    private String generateRequest(Map<String, String> param) throws IOException{
+        String request = "";
+        for (Map.Entry<String, String> entry: param.entrySet()) {
+            request = request.concat(URLEncoder.encode(entry.getKey(),"UTF-8"));
+            request = request.concat("=");
+            request = request.concat(URLEncoder.encode(entry.getValue(), "UTF-8"));
+            request = request.concat("&");
+        }
+        return request;
     }
 }
